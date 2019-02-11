@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<definitions name="queueMail" targetNamespace="CORREOS" xmlns:tns="CORREOS" xmlns:wsdlns="CORREOS" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="CORREOS">
+	<types>
+		<schema targetNamespace="CORREOS" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified">
+			<complexType name="listaStrings">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="listaStrings.listaStringsItem" type="tns1:listaStrings.listaStringsItem">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="listaStrings.listaStringsItem">
+				<all>
+					<element name="Cadena" type="xsd:string">
+					</element>
+				</all>
+			</complexType>
+			<element name="queueMail.Execute">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Prddsc" type="xsd:string" />
+						<element minOccurs="1" maxOccurs="1" name="Emlttl" type="xsd:string" />
+						<element minOccurs="1" maxOccurs="1" name="Cco" type="tns1:listaStrings" />
+						<element minOccurs="1" maxOccurs="1" name="Att" type="tns1:listaStrings" />
+						<element minOccurs="1" maxOccurs="1" name="Dst" type="tns1:listaStrings" />
+						<element minOccurs="1" maxOccurs="1" name="Cuerpo" type="tns1:listaStrings" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="queueMail.ExecuteResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="R" type="xsd:byte" />
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<message name="queueMail.ExecuteSoapIn">
+		<part name="parameters" element="tns:queueMail.Execute" />
+	</message>
+	<message name="queueMail.ExecuteSoapOut">
+		<part name="parameters" element="tns:queueMail.ExecuteResponse" />
+	</message>
+	<portType name="queueMailSoapPort">
+		<operation name="Execute">
+			<input message="wsdlns:queueMail.ExecuteSoapIn" />
+			<output message="wsdlns:queueMail.ExecuteSoapOut" />
+		</operation>
+	</portType>
+	<binding name="queueMailSoapBinding" type="wsdlns:queueMailSoapPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="Execute">
+			<soap:operation soapAction="CORREOSaction/AQUEUEMAIL.Execute" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+	<service name="queueMail">
+		<port name="queueMailSoapPort" binding="wsdlns:queueMailSoapBinding">
+			<soap:address location="http://notificaciones/enqueuemail/aqueuemail.aspx" />
+		</port>
+	</service>
+</definitions>

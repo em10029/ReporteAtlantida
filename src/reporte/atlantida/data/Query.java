@@ -1,0 +1,177 @@
+/*
+ * ©Informática Atlántida 2018.
+ * Derechos Reservados.
+ * 
+ * Este software es propiedad intelectual de Informática Atlántida (Infatlan). La información contenida
+ * es de carácter confidencial y no deberá revelarla. Solamente podrá utilizarlo de conformidad con los
+ * términos del contrato suscrito con Informática Atlántida S.A.
+ */
+package reporte.atlantida.data;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Clase estatica para las consultas SQL.
+ *
+ * @author Erick Fabricio Martínez Castellanos
+ * (<a href='mailto:efmartinez@bancatlan.hn'>efmartinez@bancatlan.hn</a>)
+ * @version 1.0 24-oct-2018
+ */
+public class Query {
+
+    /**
+     * Constructor privado, clase de comportamiento estático.
+     */
+    private Query() {
+    }
+
+    //+++++++++++++++++++++ ESTRUCTURAS +++++++++++++++++++++//
+    /**
+     * Consulta SQL en busca de peticiones de reportes (CAECEA).
+     */
+    public static final String SELECT_REPORTE = "SELECT CEAFEC, CEAHOR, CEACAN, CEACOR, CEASTA, CEATIF, CEATIP, CEAFEI, CEAFEF, CEAEMP, CEATCO, CEACOE, CEATGE, EMPDES, EMPCOR, CASE EMPNUS WHEN 999 THEN EMPNUS WHEN 110 THEN EMPNUS WHEN 100 THEN EMPNUS WHEN 10 THEN EMPNUS ELSE 999 END AS EMPNUS, CASE CEATIF WHEN 'PAGOS' THEN EMPAVP WHEN 'SALDOS' THEN EMPAVS ELSE 'FORMATOV02' END AS VERSION, CASE CEATIF WHEN 'PAGOS' THEN EMPANP WHEN 'SALDOS' THEN EMPANS ELSE 'NIVELEMP' END AS NIVEL FROM CAEDTA.CAECEA INNER JOIN CAEDTA.CAEEMP ON CAEDTA.CAEEMP.EMPNUM = CAEDTA.CAECEA.CEAEMP WHERE CAEDTA.CAECEA.CEASTA = ?";
+
+    /**
+     * Consulta SQL para recuperar los servicio del reporte(CAECEAS, CAESER).
+     */
+    public static final String SELECT_SERVICIOS = "SELECT CEASER, CEASERE, SERDES, SEREST, SERCOR, SERI1U, SERI1D, SERI2U, SERI2D, SERI3U, SERI3D FROM CAEDTA.CAECEAS INNER JOIN CAEDTA.CAESER ON CAEDTA.CAESER.SERNUM = CAEDTA.CAECEAS.CEASER WHERE CEAFEC = ? AND CEAHOR = ? AND CEACAN = ? AND CEACOR = ? AND EMPNUM = ? AND CEASERE = 'I'";
+
+    /**
+     * Consulta SQL para recuperar los conceptos del servicio (CAESCO).
+     */
+    public static final String SELECT_CONCEPTOS = "SELECT SCONUM, SCOEST, SCODES, CASE SCOOPE WHEN 'N' THEN 'I' ELSE SCOOPE END AS SCOOPE FROM CAEDTA.CAESCO WHERE EMPNUM = ? AND SERNUM = ? ORDER BY SCONUM ASC";
+
+    //+++++++++++++++++++++ COUNT +++++++++++++++++++++//
+    /**
+     * Consulta SQL para recuperar la cantidad de transacciones del diario
+     * (CAETRD).
+     */
+    public static final String SELECT_TRANSACCIONES_DIARIO = "SELECT COUNT(*) AS TOTAL FROM CAEDTA.CAETRD WHERE EMPNUM = ? AND SERNUM = ? AND TRDREF >= ? AND TRDREF <= ?";
+
+    /**
+     * Consulta SQL para recuperar la cantidad de transacciones del historico
+     * (CAETRH).
+     */
+    public static final String SELECT_TRANSACCIONES_HISTORICO = "SELECT COUNT(*) AS TOTAL FROM CAEDTA.CAETRH WHERE EMPNUM = ? AND SERNUM = ? AND TRHREF >= ? AND TRHREF <= ?";
+
+    /**
+     * Consulta SQL para recuperar la cantidad de transacciones del saldo
+     * (CAETRS).
+     */
+    public static final String SELECT_TRANSACCIONES_SALDOS = "SELECT COUNT(*) AS TOTAL FROM CAEDTA.CAETRS WHERE EMPNUM = ? AND SERNUM = ? AND TRSPAR = 0";
+
+    //+++++++++++++++++++++ TRANSACCIONES +++++++++++++++++++++//
+    //************ PAGOS ANCHO FIJO ************//
+    /**
+     * Consulta SQL para recuperar las transacciones del diario para la versión
+     * FORMATOV01 - Ancho Fijo (CAETRD).
+     */
+    public static final String SELECT_PAGOS_ANCHO_FIJO_DIARIO = "SELECT TRDNUM, TRDSUC, AGECOD, SUBSTRING(TRDREA,4,4) AS TRDREA, TRDID1, TRDID2, TRDREF, TRDRECB, TRDRECN, TRDREC, TRDREE, TRDRET, TRDREM FROM CAEDTA.CAETRD WHERE EMPNUM = ? AND SERNUM = ? AND TRDREF >= ? AND TRDREF <= ?";
+
+    /**
+     * Consulta SQL para recuperar las transacciones del historico para la
+     * versión FORMATOV01 - Ancho Fijo (CAETRH).
+     */
+    public static final String SELECT_PAGOS_ANCHO_FIJO_HISTORICO = "SELECT TRHNUM, TRHSUC, AGECOD, SUBSTRING(TRHREA,4,4) AS TRHREA, TRHID1, TRHID2, TRHREF, TRHRECB, TRHRECN, TRHREC, TRHREE, TRHRET, TRHREM FROM CAEDTA.CAETRH WHERE EMPNUM = ? AND SERNUM = ? AND TRHREF >= ? AND TRHREF <= ?";
+
+    //************ PAGOS SEPARACION PIPE ************//
+    /**
+     * Consulta SQL para recuperar las transacciones del diario para la versión
+     * FORMATOV02 - Separación Pipe (CAETRD).
+     */
+    public static final String SELECT_PAGOS_SEPARACION_PIPE_DIARIO = "SELECT CASE TRDREF WHEN to_char(CURRENT DATE, 'YYYYMMDD') THEN 'D' ELSE 'P' END AS ACCION, TRDNUM, TRDID1, TRDID2, TRDID3, TRDREM, TRDREF, TRDREH, TRDRET, TRDREE, TRDREC, TRDRECB, TRDRECN, AGECOD, TRDCAJ, TRDREA, TRDCAF, TRDCAH, TRDVAC, TRDNOA, TRDIDC, TRDTAC FROM CAEDTA.CAETRD WHERE EMPNUM = ? AND SERNUM = ? AND TRDREF >= ? AND TRDREF <= ?";
+
+    /**
+     * Consulta SQL para recuperar las transacciones del historico para la
+     * versión FORMATOV02 - Separación Pipe (CAETRH).
+     */
+    public static final String SELECT_PAGOS_SEPARACION_PIPE_HISTORICO = "SELECT CASE TRHREF WHEN to_char(CURRENT DATE, 'YYYYMMDD') THEN 'D' ELSE 'P' END AS ACCION, TRHNUM, TRHID1, TRHID2, TRHID3, TRHREM, TRHREF, TRHREH, TRHRET, TRHREE, TRHREC, TRHRECB, TRHRECN, AGECOD, TRHCAJ, TRHREA, TRHCAF, TRHCAH, TRHVAC, TRHNOA, TRHIDC, TRHTAC FROM CAEDTA.CAETRH WHERE EMPNUM = ? AND SERNUM = ? AND TRHREF >= ? AND TRHREF <= ?";
+
+    //************ PAGOS DINAMICO ************//
+    /**
+     * Consulta SQL para recuperar las opciones de la empresa (CAEOPC).
+     */
+    public static final String SELECT_OPCIONES = "SELECT OPCSEP, OPCENC, OPCFOR, OPCCOC FROM CAEDTA.CAEOPC WHERE EMPNUM = ?";
+
+    /**
+     * Consulta SQL para recuperar los parametros de la empresa (CAEPAE).
+     */
+    public static final String SELECT_PARAMETROS = "SELECT UPPER(TRIM(PAECAM)) AS PAECAM FROM CAEDTA.CAEPAE WHERE EMPNUM = ? AND PAEEST = 'A' ORDER BY (PAEORD) ASC";
+
+    //************ SALDOS ANCHO FIJO ************//
+    /**
+     * Consulta SQL para recuperar las transacciones de los saldos para la
+     * versión FORMATOV01 - Ancho Fijo (CAETRS, CAETRSC).
+     */
+    public static final String SELECT_SALDOS_ANCHO_FIJO = "SELECT CASE TRSPAM WHEN 'LPS' THEN '1'WHEN 'USD' THEN '2'WHEN 'EUR' THEN '3'ELSE '0' END TRSPAM, TRSNOA, TRSID1, TRSID2, TRSCCE, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 1), '0.00') AS CONCEPTO1, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 2), '0.00') AS CONCEPTO2, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 3), '0.00') AS CONCEPTO3, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 4), '0.00') AS CONCEPTO4, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 5), '0.00') AS CONCEPTO5 FROM CAEDTA.CAETRS WHERE EMPNUM = ? AND SERNUM = ? AND TRSPAR = 0";
+
+    //************ SALDOS SEPARACION PIPE ************//    
+    /**
+     * Consulta SQL para recuperar las transacciones de los saldos para la
+     * versión FORMATOV02 - Separación Pipe (CAETRS, CAETRSC, CAETRSG).
+     */
+    public static final String SELECT_SALDOS_SEPARACION_PIPE = "SELECT TRSID1, TRSID2, TRSID3, TRSIDC, TRSCCE, TRSNOA, TRSCAF, TRSSAV, TRSFEV, TRSCOM, TRSPAM, TRSVAM, COALESCE((SELECT CAEDTA.CAETRSG.TRSGCU FROM CAEDTA.CAETRSG WHERE CAEDTA.CAETRSG.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSG.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSG.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSG.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSG.TRSID3 = CAEDTA.CAETRS.TRSID3 FETCH FIRST 1 ROWS ONLY), 'N/A') AS AUTOGENERACION, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 1), '0.00') AS CONCEPTO1, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 2), '0.00') AS CONCEPTO2, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 3), '0.00') AS CONCEPTO3, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 4), '0.00') AS CONCEPTO4, COALESCE((SELECT CAEDTA.CAETRSC.TRSCMO FROM CAEDTA.CAETRSC WHERE CAEDTA.CAETRSC.EMPNUM = CAEDTA.CAETRS.EMPNUM AND CAEDTA.CAETRSC.SERNUM = CAEDTA.CAETRS.SERNUM AND CAEDTA.CAETRSC.TRSID1 = CAEDTA.CAETRS.TRSID1 AND CAEDTA.CAETRSC.TRSID2 = CAEDTA.CAETRS.TRSID2 AND CAEDTA.CAETRSC.TRSID3 = CAEDTA.CAETRS.TRSID3 AND TRSCNU = 5), '0.00') AS CONCEPTO5 FROM CAEDTA.CAETRS WHERE EMPNUM = ? AND SERNUM = ? AND TRSPAR = 0";
+
+    //+++++++++++++++++++++ ENVIO +++++++++++++++++++++//
+    /**
+     * Consulta SQL para recuperar en tipo de envió (CAEPEA).
+     */
+    public static final String SELECT_ENVIO = "SELECT EMPDAT FROM CAEDTA.CAEPEA WHERE PEACAM = ? AND EMPNUM = ?";
+
+    /**
+     * Consulta SQL para recuperar los campos de envió FTP (SAEPA1).
+     */
+    public static final String SELECT_ENVIO_FTP = "SELECT PA1FIN, PA1ORG, PA1USE, PA1PAS FROM SAEDTA.SAEPA1 WHERE PA2COD = ?";
+
+    /**
+     * Consulta SQL para recuperar los correos de copias ocultas (CAEPAR).
+     */
+    public static final String SELECT_ENVIO_SMTP = "SELECT PARCON FROM CAEDTA.CAEPAR LIMIT 1";
+
+    //+++++++++++++++++++++ ACTUALIZACION +++++++++++++++++++++//
+    /**
+     * Query para realizar actualización del estado del reporte (CAECEA).
+     */
+    public static final String UPDATE_REPORTE = "UPDATE CAEDTA.CAECEA SET CEASTA = ? WHERE CEAFEC = ? AND CEAHOR = ? AND CEACAN = ? AND CEACOR = ?";
+
+    /**
+     * Query para realizar actualización del estado del servicio (CAECEAS).
+     */
+    public static final String UPDATE_SERVICIO = "UPDATE CAEDTA.CAECEAS SET CEASERE = ? WHERE CEAFEC = ? AND CEAHOR = ? AND CEACAN = ? AND CEACOR = ? AND CEASER = ?";
+
+    /**
+     * Cierra un ResultSet y libera el recurso.
+     *
+     * @param rs
+     */
+    public static void cerrar(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+                rs = null;
+            } catch (SQLException ex) {
+                Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Cierra un PreparedStatement y libera el recurso.
+     *
+     * @param ps
+     */
+    public static void cerrar(PreparedStatement ps) {
+        if (ps != null) {
+            try {
+                ps.close();
+                ps = null;
+            } catch (SQLException ex) {
+                Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+}
