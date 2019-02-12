@@ -395,7 +395,7 @@ public class SMTP {
 
         cuerpo += "<br><br>";
 
-        cuerpo += "<img src='https://em10029.github.io/banco-atlantida/logo.png' width='50%' height='50%' align='center' alt='Banco Atlántida'></blockquote>";
+        //cuerpo += "<img src='https://em10029.github.io/banco-atlantida/logo.png' width='50%' height='50%' align='center' alt='Banco Atlántida'></blockquote>";
 
         return cuerpo;
     }
