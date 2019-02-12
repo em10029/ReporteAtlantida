@@ -329,7 +329,7 @@ public class Util {
         //INFORMACION
         String info = "";
         //Reporte Empresa
-        info += "\r\n----------- # " + Reporte.contador + " -> " + reporte.toString() + " -----------\r\n";
+        info += "\r\n----------- # " + reporte.getSecuencia() + " -> " + reporte.toString() + " -----------\r\n";
         info += "\r\n------------>    INFO   <------------\r\n";
         info += "Estado...............> " + estado + " |Actualizar: " + reporte.getEmpresa().actualizar() + "\r\n";
         info += "Empresa..............> " + reporte.getEmpresa().getNombre() + "\r\n";

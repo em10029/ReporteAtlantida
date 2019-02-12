@@ -49,6 +49,7 @@ public class SMTP {
         String correos = "";
         String archivos = "";
         String infoEnvio = "";
+        //String infoError = "";
 
         if (reporte.getDestino().equals("S")) { //S: Correos Definidos, se evalua el nivel para generar las notificaciones.
 
@@ -193,6 +194,7 @@ public class SMTP {
                     archivo.setEnviado(true);
                 } else {
                     archivo.setEnviado(false);
+                    //infoError += "Respuesta WS: " + respuestaWS + " - " + getInformacion(respuestaWS) + "\r\n";
                 }
 
             }
@@ -208,6 +210,7 @@ public class SMTP {
         }
 
         reporte.setInfoEnvio(infoEnvio);
+        //reporte.setInfoError(infoError);
     }
 
     /**
@@ -392,7 +395,7 @@ public class SMTP {
 
         cuerpo += "<br><br>";
 
-        //cuerpo += "<img src='https://em10029.github.io/banco-atlantida/logo.png' width='50%' height='50%' align='center' alt='Banco Atlántida'></blockquote>";
+        cuerpo += "<img src='https://em10029.github.io/banco-atlantida/logo.png' width='50%' height='50%' align='center' alt='Banco Atlántida'></blockquote>";
 
         return cuerpo;
     }

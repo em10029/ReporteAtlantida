@@ -26,6 +26,11 @@ public class Reporte {
      * Contador de objetos
      */
     public static int contador = 0;
+    
+    /**
+     * Secuencia de ocurrencia del objeto.
+     */
+    private int secuencia;
 
     /**
      * (PK)Fecha - CAECEA.CAEFEC
@@ -135,6 +140,7 @@ public class Reporte {
      */
     public Reporte(Directorio root) throws ReporteAtlantidaExcepcion {
         contador++;
+        this.secuencia = contador;
         this.empresa = new Empresa();
         this.archivos = new ArrayList<>();
         this.directorio = new Directorio(root.getUbicacion(), root.getURL());
@@ -158,6 +164,14 @@ public class Reporte {
         return this.fecha + "-" + this.hora + "-" + this.canal + "-" + this.correlativo;
     }
 
+    /**
+     * Get del campo secuencia.
+     * @return int
+     */
+    public int getSecuencia() {
+        return secuencia;
+    }
+    
     /**
      * Get del campo fecha.
      *
@@ -494,5 +508,5 @@ public class Reporte {
             Logger.getLogger(Reporte.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+       
 }
