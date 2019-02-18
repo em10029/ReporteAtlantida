@@ -393,7 +393,7 @@ public class SMTP {
 
         cuerpo += "<b>Si desea más información comuníquese con: Service Centre Soporte Cash Management, <a href='mailto:servicecentre@bancatlan.hn'>servicecentre@bancatlan.hn</a> (504) 2280-0000 ext. 2158, 1227, 1223 </b>";
 
-        cuerpo += "<br><br>";
+        //cuerpo += "<br><br>";
 
         //cuerpo += "<img src='https://em10029.github.io/banco-atlantida/logo.png' width='50%' height='50%' align='center' alt='Banco Atlántida'></blockquote>";
 
