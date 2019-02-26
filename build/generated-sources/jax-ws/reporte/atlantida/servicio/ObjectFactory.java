@@ -30,14 +30,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link QueueMailExecuteResponse }
-     * 
-     */
-    public QueueMailExecuteResponse createQueueMailExecuteResponse() {
-        return new QueueMailExecuteResponse();
-    }
-
-    /**
      * Create an instance of {@link QueueMailExecute }
      * 
      */
@@ -51,6 +43,14 @@ public class ObjectFactory {
      */
     public ListaStrings createListaStrings() {
         return new ListaStrings();
+    }
+
+    /**
+     * Create an instance of {@link QueueMailExecuteResponse }
+     * 
+     */
+    public QueueMailExecuteResponse createQueueMailExecuteResponse() {
+        return new QueueMailExecuteResponse();
     }
 
     /**
