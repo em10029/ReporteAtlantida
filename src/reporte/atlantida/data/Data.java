@@ -158,9 +158,10 @@ public class Data {
      * @param reporte
      * @param servicio
      * @param formatoFecha
+     * @param evaluaIdentificador
      * @return Data
      */
-    public static Data getDetalle(Reporte reporte, Servicio servicio, boolean formatoFecha) {
+    public static Data getDetalle(Reporte reporte, Servicio servicio, boolean formatoFecha, boolean evaluaIdentificador) {
 
         Data detallado = new Data();
 
@@ -187,45 +188,49 @@ public class Data {
         camposHistorico.add("\'" + servicio.getIdentificador() + "\'");
         estilos.add("C");
 
-        //4-IDENTIFICADOR1
-        if (reporte.getEmpresa().getNivel().equals("NIVELEMP")) {
+        //Identificadores
+        if(evaluaIdentificador){ //Aplica solo para nivel de servicio excel.
+            //4-IDENTIFICADOR1
+            if (servicio.getEstadoIdentificador1().equals("S")) {
+                encabezado.add(servicio.getDescripcionIdentificador1());
+                camposDiario.add("TRDID1");
+                camposHistorico.add("TRHID1");
+                estilos.add("I");
+            }
+            //5-IDENTIFICADOR2
+            if (servicio.getEstadoIdentificador2().equals("S")) {
+                encabezado.add(servicio.getDescripcionIdentificador2());
+                camposDiario.add("TRDID2");
+                camposHistorico.add("TRHID2");
+                estilos.add("I");
+            }
+            //6-IDENTIFICADOR3
+            if (servicio.getEstadoIdentificador3().equals("S")) {
+                encabezado.add(servicio.getDescripcionIdentificador3());
+                camposDiario.add("TRDID3");
+                camposHistorico.add("TRHID3");
+                estilos.add("I");
+            }
+        }else{
+            //4-IDENTIFICADOR1
             encabezado.add("ID1");
             camposDiario.add("TRDID1");
             camposHistorico.add("TRHID1");
             estilos.add("I");
-        } else if (servicio.getEstadoIdentificador1().equals("S")) {
-            encabezado.add(servicio.getDescripcionIdentificador1());
-            camposDiario.add("TRDID1");
-            camposHistorico.add("TRHID1");
-            estilos.add("I");
-        }
 
-        //5-IDENTIFICADOR2
-        if (reporte.getEmpresa().getNivel().equals("NIVELEMP")) {
+            //5-IDENTIFICADOR2
             encabezado.add("ID2");
             camposDiario.add("TRDID2");
             camposHistorico.add("TRHID2");
             estilos.add("I");
-        } else if (servicio.getEstadoIdentificador2().equals("S")) {
-            encabezado.add(servicio.getDescripcionIdentificador2());
-            camposDiario.add("TRDID2");
-            camposHistorico.add("TRHID2");
-            estilos.add("I");
-        }
 
-        //6-IDENTIFICADOR3
-        if (reporte.getEmpresa().getNivel().equals("NIVELEMP")) {
+            //6-IDENTIFICADOR3
             encabezado.add("ID3");
             camposDiario.add("TRDID3");
             camposHistorico.add("TRHID3");
             estilos.add("I");
-        } else if (servicio.getEstadoIdentificador3().equals("S")) {
-            encabezado.add(servicio.getDescripcionIdentificador3());
-            camposDiario.add("TRDID3");
-            camposHistorico.add("TRHID3");
-            estilos.add("I");
         }
-
+        
         //7-MONEDA DE PAGO
         encabezado.add("Moneda Pago");
         camposDiario.add("TRDREM");
