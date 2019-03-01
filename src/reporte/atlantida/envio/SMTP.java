@@ -71,7 +71,7 @@ public class SMTP {
                 ListaStrings dst = convertir(getLista(correos)); //Destinatarios
                 ListaStrings cco = convertir(getLista(reporte.getEmpresa().getCopiasOcultas())); //Copias ocultas
                 ListaStrings att = convertir(getLista(archivos)); //Documentos adjuntos
-                ListaStrings bdy = convertir(generarCuerpo(reporte)); //Cuerpo
+                ListaStrings bdy = generarCuerpo(reporte); //Cuerpo
 
                 //Prepara la notificacion
                 QueueMailExecute notificacion = new QueueMailExecute();
@@ -99,7 +99,7 @@ public class SMTP {
                 infoEnvio += "Destinatarios: " + Arrays.toString(getLista(correos).toArray()) + "\r\n";
                 infoEnvio += "Copias Ocultas: " + Arrays.toString(getLista(reporte.getEmpresa().getCopiasOcultas()).toArray()) + "\r\n";
                 infoEnvio += "Archivos: " + Arrays.toString(getLista(archivos).toArray()) + "\r\n";
-                infoEnvio += "Cuerpo: " + generarCuerpo(reporte) + "\r\n";
+                infoEnvio += "Cuerpo: " + viewListaStrings(bdy) + "\r\n";
                 infoEnvio += "Respuesta WS: " + respuestaWS + " - " + getInformacion(respuestaWS) + "\r\n";
 
                 //System.out.println(info);
@@ -121,7 +121,7 @@ public class SMTP {
                     ListaStrings dst = convertir(getLista(correos)); //Destinatarios
                     ListaStrings cco = convertir(getLista(reporte.getEmpresa().getCopiasOcultas())); //Copias ocultas
                     ListaStrings att = convertir(getLista(archivos)); //Documentos adjuntos
-                    ListaStrings bdy = convertir(generarCuerpo(reporte)); //Cuerpo
+                    ListaStrings bdy = generarCuerpo(reporte); //Cuerpo
 
                     //Prepara la notificacion
                     QueueMailExecute notificacion = new QueueMailExecute();
@@ -149,7 +149,7 @@ public class SMTP {
                     infoEnvio += "Destinatarios: " + Arrays.toString(getLista(correos).toArray()) + "\r\n";
                     infoEnvio += "Copias Ocultas: " + Arrays.toString(getLista(reporte.getEmpresa().getCopiasOcultas()).toArray()) + "\r\n";
                     infoEnvio += "Archivos: " + Arrays.toString(getLista(archivos).toArray()) + "\r\n";
-                    infoEnvio += "Cuerpo: " + generarCuerpo(reporte) + "\r\n";
+                    infoEnvio += "Cuerpo: " + viewListaStrings(bdy) + "\r\n";
                     infoEnvio += "Respuesta WS: " + respuestaWS + " - " + getInformacion(respuestaWS) + "\r\n\r\n";
 
                     archivos = "";
@@ -175,7 +175,7 @@ public class SMTP {
             ListaStrings dst = convertir(getLista(correos)); //Destinatarios
             ListaStrings cco = convertir(getLista(reporte.getEmpresa().getCopiasOcultas())); //Copias ocultas
             ListaStrings att = convertir(getLista(archivos)); //Documentos adjuntos
-            ListaStrings bdy = convertir(generarCuerpo(reporte)); //Cuerpo
+            ListaStrings bdy = generarCuerpo(reporte); //Cuerpo
 
             //Prepara la notificacion
             QueueMailExecute notificacion = new QueueMailExecute();
@@ -204,7 +204,7 @@ public class SMTP {
             infoEnvio += "Destinatarios: " + Arrays.toString(getLista(correos).toArray()) + "\r\n";
             infoEnvio += "Copias Ocultas: " + Arrays.toString(getLista(reporte.getEmpresa().getCopiasOcultas()).toArray()) + "\r\n";
             infoEnvio += "Archivos: " + Arrays.toString(getLista(archivos).toArray()) + "\r\n";
-            infoEnvio += "Cuerpo: " + generarCuerpo(reporte) + "\r\n";
+            infoEnvio += "Cuerpo: " + viewListaStrings(bdy) + "\r\n";
             infoEnvio += "Respuesta WS: " + respuestaWS + " - " + getInformacion(respuestaWS) + "\r\n";
 
         }
@@ -370,34 +370,58 @@ public class SMTP {
 
         return listaStrings;
     }
-
+ 
     /**
      * Genera una cadena con formato HTML la cual contendra el contenido del
      * correo electronico.
      *
      * @param reporte
-     * @return String
+     * @return ListaStrings
      */
-    private static String generarCuerpo(Reporte reporte) {
-        String cuerpo = "<blockquote align='center'><h2><strong><span style='color: #FF0000'>Caja Empresarial</span></strong></h2>";
-
-        cuerpo += "Estimado cliente, se adjunta archivo con los " + reporte.getInformacion().toLowerCase() + " de la empresa: <b> " + reporte.getEmpresa().getNombre() + "</b> ";
-
+    private static ListaStrings generarCuerpo(Reporte reporte) {
+        
+        ListaStrings notificacion = new ListaStrings();
+        
+        ListaStringsListaStringsItem head = new ListaStringsListaStringsItem();
+        notificacion.getListaStringsListaStringsItem().add(head);
+        
+        ListaStringsListaStringsItem body = new ListaStringsListaStringsItem();
+        notificacion.getListaStringsListaStringsItem().add(body);
+        
+        ListaStringsListaStringsItem footer = new ListaStringsListaStringsItem();
+        notificacion.getListaStringsListaStringsItem().add(footer);
+        
+        head.setCadena("<blockquote align='center'><h2><strong><span style='color: #E21E30'>Caja Empresarial</span></strong></h2>"); //105 caracteres
+        
+        String cuerpo = "Estimado cliente, se adjunta archivo con los " + reporte.getInformacion().toLowerCase() + " de la empresa: <b> " + reporte.getEmpresa().getNombre() + "</b> ";
+        
         if (reporte.getFechaInicial().equals(reporte.getFechaFinal())) {
             cuerpo += "Registrados el " + Util.getFormatoFecha(reporte.getFechaInicial(), "-", "AAAAMMDD", "DDMMAAAA");
         } else {
             cuerpo += "Registrados del " + Util.getFormatoFecha(reporte.getFechaInicial(), "-", "AAAAMMDD", "DDMMAAAA") + " al " + Util.getFormatoFecha(reporte.getFechaFinal(), "-", "AAAAMMDD", "DDMMAAAA");
         }
-
-        cuerpo += "<br><br>";
-
-        cuerpo += "<b>Si desea más información comuníquese con: Service Centre Soporte Cash Management, <a href='mailto:servicecentre@bancatlan.hn'>servicecentre@bancatlan.hn</a> (504) 2280-0000 ext. 2158, 1227, 1223 </b>";
-
-        //cuerpo += "<br><br>";
-
-        //cuerpo += "<img src='https://em10029.github.io/banco-atlantida/logo.png' width='50%' height='50%' align='center' alt='Banco Atlántida'></blockquote>";
-
-        return cuerpo;
+        
+        body.setCadena(cuerpo); //256 caracetes
+        
+        footer.setCadena("<br><br><b>Si desea más información comuníquese con: Service Centre Soporte Cash Management, <a href='mailto:servicecentre@bancatlan.hn'>servicecentre@bancatlan.hn</a> (504) 2280-0000 ext. 2158, 1227, 1223 </b>"); //210 caracteres
+        
+        return notificacion;
     }
 
+    /**
+     * Retorna una cadena con los items de un ListaStrings.
+     * @param listaStrings
+     * @return String
+     */
+    public static String viewListaStrings(ListaStrings listaStrings){
+        String string = "";
+        for(ListaStringsListaStringsItem item : listaStrings.getListaStringsListaStringsItem()){
+            string += "[" + item.getCadena() + "]";
+        }
+        return string;
+    }
+    
+    
+    
+    
 }
