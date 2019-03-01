@@ -184,7 +184,7 @@ public class Generacion {
                                 //Informacion
                                 reporte.setInfoGeneracion("*Conceptos: " + reporte.getEmpresa().getCantidadConcepto() + "\r\n");
                                 for (int i = 0; i < size; i++) {
-                                    detalles[i] = Data.getDetalle(reporte, servicios.get(i), true);
+                                    detalles[i] = Data.getDetalle(reporte, servicios.get(i), true, false);
                                     reporte.setInfoGeneracion(Data.toString(reporte, servicios.get(i), detalles[i]));
                                 }
 
@@ -203,7 +203,7 @@ public class Generacion {
                                         //CUERPO
                                         for (int i = 0; i < size; i++) {
                                             //DATA
-                                            Data detalle = Data.getDetalle(reporte, servicios.get(i), false);
+                                            Data detalle = Data.getDetalle(reporte, servicios.get(i), false, false);
 
                                             switch (reporte.getContenido()) {
                                                 case "T": //DIARIO E HISTORICO
@@ -245,7 +245,7 @@ public class Generacion {
                                         archivoDetallado.agregarEncabezado(reporte.getEmpresa().getIdentificador(),
                                                 reporte.getEmpresa().getTransacciones(),
                                                 Util.getFechaHoraActual("dd/MM/YYYY"),
-                                                Util.getFechaHoraActual("hh:mm:ss"));
+                                                Util.getFechaHoraActual("HH:mm:ss"));
 
                                         //TABLA
                                         archivoDetallado.agregarTabla(detalles[0].getEncabezado());
@@ -445,7 +445,7 @@ public class Generacion {
 
                                 //Informacion                                
                                 for (int i = 0; i < size; i++) {
-                                    detalles[i] = Data.getDetalle(reporte, servicios.get(i), true);
+                                    detalles[i] = Data.getDetalle(reporte, servicios.get(i), true, true);
                                     reporte.setInfoGeneracion(Data.toString(reporte, servicios.get(i), detalles[i]));
                                 }
 
@@ -463,7 +463,7 @@ public class Generacion {
 
                                         if (archivoDetallado.crear()) {
                                             //DATA
-                                            Data detalle = Data.getDetalle(reporte, servicios.get(i), false);
+                                            Data detalle = Data.getDetalle(reporte, servicios.get(i), false, false);
 
                                             //ENCABEZADO
                                             generarEncabezadoServicio(reporte, servicios.get(i), archivoDetallado);
@@ -515,7 +515,7 @@ public class Generacion {
                                             archivoDetallado.agregarEncabezado(reporte.getEmpresa().getIdentificador(),
                                                     servicios.get(i).getTransacciones(),
                                                     Util.getFechaHoraActual("dd/MM/YYYY"),
-                                                    Util.getFechaHoraActual("hh:mm:ss"));
+                                                    Util.getFechaHoraActual("HH:mm:ss"));
 
                                             //TABLA
                                             archivoDetallado.agregarTabla(detalles[i].getEncabezado());
@@ -1009,7 +1009,7 @@ public class Generacion {
             ps = conexion.getConexion().prepareStatement(Query.SELECT_OPCIONES);
             ps.setString(1, reporte.getEmpresa().getIdentificador());
             rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 dinamico.setSeparador(rs.getString("OPCSEP").trim()); //Separador
                 dinamico.setEncabezado(rs.getString("OPCENC").trim()); //Encabezado (A:Activo, I:Inactivo)
                 dinamico.setFormatoFecha(rs.getString("OPCFOR").trim().equals("E") ? "DDMMAAAA" : "AAAAMMDD"); //Formato de fecha (E:DD/MM/AAAA , I:AAAA/MM/DD)
@@ -1169,7 +1169,7 @@ public class Generacion {
                         += reporte.getEmpresa().getIdentificador() + "|"
                         + reporte.getEmpresa().getTransacciones() + "|"
                         + Util.getFechaHoraActual("YYYYMMdd") + "|"
-                        + Util.getFechaHoraActual("hh:mm:ss");
+                        + Util.getFechaHoraActual("HH:mm:ss");
                 break;
             case "SALDOS":
                 encabezado
@@ -1199,7 +1199,7 @@ public class Generacion {
                         += reporte.getEmpresa().getIdentificador() + "|"
                         + servicio.getTransacciones() + "|"
                         + Util.getFechaHoraActual("YYYYMMdd") + "|"
-                        + Util.getFechaHoraActual("hh:mm:ss");
+                        + Util.getFechaHoraActual("HH:mm:ss");
                 break;
             case "SALDOS":
                 encabezado

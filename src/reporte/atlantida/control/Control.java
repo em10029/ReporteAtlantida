@@ -80,7 +80,7 @@ public class Control {
                 directorio = new Directorio(Configuracion.DIRECTORIO_INTERNO,
                         Configuracion.DIRECTORIO_EXTERNO);
                 //Creacion del directorio raiz
-                if (directorio.crear(Util.getFechaHoraActual("dd.MM.YYYY-hh.mm.ss"))) {
+                if (directorio.crear(Util.getFechaHoraActual("dd.MM.YYYY-HH.mm.ss"))) {
                     log = new ArchivoTextoPlano(directorio, "App", ".log");
                     //Creacion de archivo log de apliacion
                     if (log.crear()) {

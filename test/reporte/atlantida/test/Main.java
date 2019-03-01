@@ -11,6 +11,7 @@ package reporte.atlantida.test;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import reporte.atlantida.estructura.ReporteAtlantidaExcepcion;
+import reporte.atlantida.utilitario.Util;
 
 /**
  * Inicio principal del programa.
@@ -31,6 +32,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {             
+        
+        
         try {
             //Despliegue de aplicacion
             Controlador app = new Controlador(); //Reporte Atlantida Automatico
@@ -38,7 +41,12 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } finally{            
             System.exit(0);
-        }        
+        } 
+        
+        /*
+        String hora = Util.getFechaHoraActual("HH:mm:ss");
+        System.out.println(hora);
+        */
     }
     
 }
