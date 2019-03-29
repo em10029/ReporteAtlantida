@@ -295,14 +295,10 @@ public class Util {
         if (reporte.getDestino().equals("S")) { //S: Por definicion, puede ser COR o FTP
             if (reporte.getEmpresa().getTipoEnvio().equals("COR")) { //Correo electronico
                 destino = "S - COR - Correo Electrónico";
-
-                if (reporte.getEmpresa().getNivel().equals("NIVELEMP")) { //Empresa
-                    envio = "Correos de la empresa y de los servicios";
-                    infoEnvio += "Correos empresa: " + reporte.getEmpresa().getCorreos() + "\r\n";
-                } else { //Servicios
-                    envio = "Correos de los servicios";
-                }
-
+                
+                envio = "Correos de la empresa y de los servicios";
+                infoEnvio += "Correos empresa: " + reporte.getEmpresa().getCorreos() + "\r\n";
+                                
                 //Correos de servicios
                 for (Servicio servicio : reporte.getEmpresa().getServicios()) {
                     infoEnvio += "Correos servicio " + servicio.toString() + " : " + servicio.getCorreos() + "\r\n";
@@ -310,13 +306,15 @@ public class Util {
 
                 //Copias ocultas
                 infoEnvio += "Copias ocultas (CCO): " + reporte.getEmpresa().getCopiasOcultas() + "\r\n";
-
+                
             } else { //Servidor de archivos
                 destino = "S - FTP - Servidor de archivos";
                 envio = "Server";
                 infoEnvio += "URL: " + reporte.getEmpresa().getUrl() + "\r\n";
                 infoEnvio += "Directorio: " + reporte.getEmpresa().getDirectorio() + "\r\n";
                 infoEnvio += "Código de envío: " + reporte.getEmpresa().getCodigoEnvio() + "\r\n";
+                infoEnvio += "User: " + reporte.getEmpresa().getUser() + "\r\n";
+                infoEnvio += "Password: " + reporte.getEmpresa().getPassword() + "\r\n";
             }
         } else { //N: Correo electronico, otros correos
             destino = "N - Correo Electrónico";

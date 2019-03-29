@@ -103,14 +103,15 @@ public class SMTP {
                 infoEnvio += "Respuesta WS: " + respuestaWS + " - " + getInformacion(respuestaWS) + "\r\n";
 
                 //System.out.println(info);
-            } else { //Correos de los servicios, notificaciones segun servicios.
+            } else { //Correos de la empresa y de los servicios, notificaciones segun servicios.
 
                 infoEnvio = "Notificaciónes generadas a nivel de servicios\r\n\r\n";
-
+                              
                 for (Servicio servicio : reporte.getEmpresa().getServicios()) {
 
-                    correos = servicio.getCorreos(); //Correos del servicio
-
+                    correos = reporte.getEmpresa().getCorreos() + ","; //Correos de la empresa                    
+                    correos += servicio.getCorreos(); //Correos del servicio
+                    
                     for (Archivo archivo : servicio.getArchivos()) { //Archivo que se generaron
                         archivos += archivo.getURL() + ",";
                     }
