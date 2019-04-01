@@ -219,7 +219,7 @@ public class Control {
 
         switch (reporte.getInformacion()) {
             case "PAGOS":
-
+                
                 //DIARIO
                 if (reporte.getContenido().equals("T") || reporte.getContenido().equals("D")) {
                     try {
@@ -244,7 +244,14 @@ public class Control {
                 //HISTORICO
                 if (reporte.getContenido().equals("T") || reporte.getContenido().equals("H")) {
                     try {
-                        ps = conexion.getConexion().prepareStatement(Query.SELECT_TRANSACCIONES_HISTORICO);
+                                                
+                        String query = Query.SELECT_TRANSACCIONES_HISTORICO;                        
+                        //Verificando si es cierre
+                        if(reporte.getGeneracion().equals("C")){
+                            query = Query.SELECT_TRANSACCIONES_HISTORICO_CIERRE;
+                        }
+                        
+                        ps = conexion.getConexion().prepareStatement(query);
                         ps.setString(1, reporte.getEmpresa().getIdentificador());
                         ps.setString(2, servicio.getIdentificador());
                         ps.setString(3, reporte.getFechaInicial());

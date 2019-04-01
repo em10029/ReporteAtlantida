@@ -172,8 +172,8 @@ public class Data {
 
         //1-ACCION ***
         encabezado.add("Estado");
-        camposDiario.add("CASE TRDREF WHEN to_char(CURRENT DATE, 'YYYYMMDD') THEN 'D' ELSE 'P' END AS ACCION");
-        camposHistorico.add("CASE TRHREF WHEN to_char(CURRENT DATE, 'YYYYMMDD') THEN 'D' ELSE 'P' END AS ACCION");
+        camposDiario.add("'D' AS ACCION");
+        camposHistorico.add("'P' AS ACCION");
         estilos.add("C");
 
         //2-NUMERO DE RECIBO
@@ -417,8 +417,14 @@ public class Data {
         }
         //Eliminando la ultima coma
         queryHistorico = "SELECT " + queryHistorico.substring(0, queryHistorico.length() - 1);
+        
         //Condicion de query
-        queryHistorico += " FROM CAEDTA.CAETRH WHERE EMPNUM = " + reporte.getEmpresa().getIdentificador() + " AND SERNUM = " + servicio.getIdentificador() + " AND TRHREF >= " + reporte.getFechaInicial() + " AND TRHREF <= " + reporte.getFechaFinal();
+        if(reporte.getGeneracion().equals("C")){ //Cierre
+            queryHistorico += " FROM CAEDTA.CAETRH WHERE EMPNUM = " + reporte.getEmpresa().getIdentificador() + " AND SERNUM = " + servicio.getIdentificador() + " AND TRHACF >= " + reporte.getFechaInicial() + " AND TRHACF <= " + reporte.getFechaFinal();
+        }else{
+            queryHistorico += " FROM CAEDTA.CAETRH WHERE EMPNUM = " + reporte.getEmpresa().getIdentificador() + " AND SERNUM = " + servicio.getIdentificador() + " AND TRHREF >= " + reporte.getFechaInicial() + " AND TRHREF <= " + reporte.getFechaFinal();
+        }
+        
 
         detallado.queryHistorico = queryHistorico;
 
@@ -705,7 +711,12 @@ public class Data {
         }
 
         //Condicion de query
-        queryHistorico += " FROM CAEDTA.CAETRH WHERE EMPNUM = " + reporte.getEmpresa().getIdentificador() + " AND SERNUM = " + servicio.getIdentificador() + " AND TRHREF >= " + reporte.getFechaInicial() + " AND TRHREF <= " + reporte.getFechaFinal();
+        if(reporte.getGeneracion().equals("C")){
+            queryHistorico += " FROM CAEDTA.CAETRH WHERE EMPNUM = " + reporte.getEmpresa().getIdentificador() + " AND SERNUM = " + servicio.getIdentificador() + " AND TRHACF >= " + reporte.getFechaInicial() + " AND TRHACF <= " + reporte.getFechaFinal();
+        }else{
+            queryHistorico += " FROM CAEDTA.CAETRH WHERE EMPNUM = " + reporte.getEmpresa().getIdentificador() + " AND SERNUM = " + servicio.getIdentificador() + " AND TRHREF >= " + reporte.getFechaInicial() + " AND TRHREF <= " + reporte.getFechaFinal();
+        }
+        
 
         data.queryHistorico = queryHistorico;
 

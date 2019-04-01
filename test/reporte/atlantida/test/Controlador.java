@@ -41,7 +41,7 @@ public final class Controlador {
                 try {
                     Runtime garbage = Runtime.getRuntime();
                     garbage.gc();
-                    System.out.println("Espera... Tiempo: " + Configuracion.CONTROL_TIEMPO + " minutos");
+                    //System.out.println("Espera... Tiempo: " + Configuracion.CONTROL_TIEMPO + " minutos");
                     Thread.sleep(Configuracion.CONTROL_TIEMPO * 5000); //Pausa en milisegundos
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);

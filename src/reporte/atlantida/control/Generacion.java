@@ -48,11 +48,6 @@ public class Generacion {
     private static final String FORMATO_PAGOS_SEPARACION_PIPE = "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s"; //30
 
     /**
-     * Formato de trama para archivos de pagos con versión FORMATOV04.
-     */
-    private static final String FORMATO_PAGOS_DETALLADO = "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s"; //29    
-
-    /**
      * Formato de trama para archivos de saldos con versión FORMATOV01.
      */
     private static final String FORMATO_SALDOS_ANCHO_FIJO = "%-9.9s%-2.2s%-1.1s%-15.15s%-40.40s%16.16s%16.16s%10.10s%10.10s%10.10s%10.10s%10.10s"; //13
@@ -118,7 +113,7 @@ public class Generacion {
                                                 pagoAnchoFijo(conexion, Query.SELECT_PAGOS_ANCHO_FIJO_DIARIO, reporte, servicio, archivoAnchoFijo);
                                                 break;
                                             case "H": //HISTORICO
-                                                pagoAnchoFijo(conexion, Query.SELECT_PAGOS_ANCHO_FIJO_HISTORICO, reporte, servicio, archivoAnchoFijo);
+                                                pagoAnchoFijo(conexion, Query.SELECT_PAGOS_ANCHO_FIJO_HISTORICO_CIERRE, reporte, servicio, archivoAnchoFijo);
                                                 break;
                                             default:
                                                 break;
@@ -158,7 +153,7 @@ public class Generacion {
                                                 pagoSeparacionPipe(conexion, Query.SELECT_PAGOS_SEPARACION_PIPE_DIARIO, reporte, servicio, archivoSeparacionPipe);
                                                 break;
                                             case "H": //HISTORICO
-                                                pagoSeparacionPipe(conexion, Query.SELECT_PAGOS_SEPARACION_PIPE_HISTORICO, reporte, servicio, archivoSeparacionPipe);
+                                                pagoSeparacionPipe(conexion, Query.SELECT_PAGOS_SEPARACION_PIPE_HISTORICO_CIERRE, reporte, servicio, archivoSeparacionPipe);
                                                 break;
                                             default:
                                                 break;
@@ -373,7 +368,7 @@ public class Generacion {
                                                 pagoAnchoFijo(conexion, Query.SELECT_PAGOS_ANCHO_FIJO_DIARIO, reporte, servicio, archivoAnchoFijo);
                                                 break;
                                             case "H": //HISTORICO
-                                                pagoAnchoFijo(conexion, Query.SELECT_PAGOS_ANCHO_FIJO_HISTORICO, reporte, servicio, archivoAnchoFijo);
+                                                pagoAnchoFijo(conexion, Query.SELECT_PAGOS_ANCHO_FIJO_HISTORICO_CIERRE, reporte, servicio, archivoAnchoFijo);
                                                 break;
                                             default:
                                                 break;
@@ -419,7 +414,7 @@ public class Generacion {
                                                 pagoSeparacionPipe(conexion, Query.SELECT_PAGOS_SEPARACION_PIPE_DIARIO, reporte, servicio, archivoSeparacionPipe);
                                                 break;
                                             case "H": //HISTORICO
-                                                pagoSeparacionPipe(conexion, Query.SELECT_PAGOS_SEPARACION_PIPE_HISTORICO, reporte, servicio, archivoSeparacionPipe);
+                                                pagoSeparacionPipe(conexion, Query.SELECT_PAGOS_SEPARACION_PIPE_HISTORICO_CIERRE, reporte, servicio, archivoSeparacionPipe);
                                                 break;
                                             default:
                                                 break;
