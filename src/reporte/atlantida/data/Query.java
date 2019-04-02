@@ -90,9 +90,6 @@ public class Query {
      */
     public static final String SELECT_PAGOS_ANCHO_FIJO_HISTORICO_CIERRE = "SELECT SUBSTRING(TRHNUM,4,11) AS TRHNUM, TRHSUC, AGECOD, SUBSTRING(TRHREA,4,4) AS TRHREA, TRHID1, TRHID2, (CONCAT(CONCAT(CONCAT(TRIM(SUBSTR(TRHREF,7,8)), '/'), CONCAT(SUBSTR(TRHREF,5,2), '/')), SUBSTR(TRHREF,3,2))) AS TRHREF, TRHRECB, TRHRECN, TRHREC, TRHREE, TRHRET, TRHREM FROM CAEDTA.CAETRH WHERE EMPNUM = ? AND SERNUM = ? AND TRHACF >= ? AND TRHACF <= ?";
 
-    
-    
-    
     //************ PAGOS SEPARACION PIPE ************//
     /**
      * Consulta SQL para recuperar las transacciones del diario para la versión
@@ -112,12 +109,6 @@ public class Query {
      */
     public static final String SELECT_PAGOS_SEPARACION_PIPE_HISTORICO_CIERRE = "SELECT 'P' AS ACCION, TRHNUM, TRHID1, TRHID2, TRHID3, TRHREM, TRHREF, TRHREH, TRHRET, TRHREE, TRHREC, TRHRECB, TRHRECN, AGECOD, TRHCAJ, TRHREA, TRHCAF, TRHCAH, TRHVAC, TRHNOA, TRHIDC, TRHTAC FROM CAEDTA.CAETRH WHERE EMPNUM = ? AND SERNUM = ? AND TRHACF >= ? AND TRHACF <= ?";
 
-    
-    
-    
-    
-    
-    
     //************ PAGOS DINAMICO ************//
     /**
      * Consulta SQL para recuperar las opciones de la empresa (CAEOPC).
