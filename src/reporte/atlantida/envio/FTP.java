@@ -139,7 +139,7 @@ public class FTP {
 
         byte[] IP = getIP(reporte.getEmpresa().getUrl());
 
-        FTPClient ftp = new FTPSClient();
+        FTPClient ftp = new FTPClient();
 
         InetAddress conexion = InetAddress.getByAddress(IP);
 
